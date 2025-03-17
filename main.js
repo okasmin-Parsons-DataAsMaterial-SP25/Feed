@@ -1,48 +1,100 @@
-import './style.css'
-import * as d3 from 'd3';
+import "./style.css";
+import * as d3 from "d3";
 
-console.log(d3);
+const app = d3.select("#app");
 
-const app = d3.select('#app');
+// Get today's date
+const today = new Date();
+const currentMinute = today.getMinutes();
 
-function getPreviousDay() {
-    // Get today's date
-    const today = new Date();
+// get the day before yesterday's date by subtracting 2 from today's date
+const previousDay = new Date();
+previousDay.setDate(today.getDate() - 2);
 
-    // Get the previous day's date by subtracting 1 day from today's date
-    const previousDay = new Date(today);
-    previousDay.setDate(today.getDate() - 1);
+// Format to "YYYY-MM-DDT00:00:00"
+const formattedPreviousDayStart =
+	previousDay.toISOString().split("T")[0] + "T00:00:00";
+const formattedPreviousDayEnd =
+	previousDay.toISOString().split("T")[0] + "T23:59:59";
 
-    // Format the previous day's date to "YYYY-MM-DDT00:00:00"
-    const formattedPreviousDay = previousDay.toISOString().split('T')[0] + 'T00:00:00';
+// Fetch paginated data - NYC Open Data returns 1000 at a time by default
+const getData = async () => {
+	const BASE_URL = `https://data.cityofnewyork.us/resource/erm2-nwe9.json`;
+	const LIMIT = 1000; // records per request
+	let offset = 0; // start at first record
+	let allData = []; // store all results
+	const WHERE_CLAUSE = `created_date between'${formattedPreviousDayStart}'and'${formattedPreviousDayEnd}'`;
 
-    // Get the previous day's date + 1 day (to form the end of the range)
-    const nextDay = new Date(previousDay);
-    nextDay.setDate(previousDay.getDate() + 1);
-    const formattedNextDay = nextDay.toISOString().split('T')[0] + 'T00:00:00';
+	let moreDataAvailable = true;
 
-    // Construct the API URL with the date range
-    const previousDayData = `https://data.cityofnewyork.us/resource/erm2-nwe9.json?$query=SELECT%0A%20%20%60unique_key%60%2C%0A%20%20%60created_date%60%2C%0A%20%20%60closed_date%60%2C%0A%20%20%60agency%60%2C%0A%20%20%60agency_name%60%2C%0A%20%20%60complaint_type%60%2C%0A%20%20%60descriptor%60%2C%0A%20%20%60location_type%60%2C%0A%20%20%60incident_zip%60%2C%0A%20%20%60incident_address%60%2C%0A%20%20%60street_name%60%2C%0A%20%20%60cross_street_1%60%2C%0A%20%20%60cross_street_2%60%2C%0A%20%20%60intersection_street_1%60%2C%0A%20%20%60intersection_street_2%60%2C%0A%20%20%60address_type%60%2C%0A%20%20%60city%60%2C%0A%20%20%60landmark%60%2C%0A%20%20%60facility_type%60%2C%0A%20%20%60status%60%2C%0A%20%20%60due_date%60%2C%0A%20%20%60resolution_description%60%2C%0A%20%20%60resolution_action_updated_date%60%2C%0A%20%20%60community_board%60%2C%0A%20%20%60bbl%60%2C%0A%20%20%60borough%60%2C%0A%20%20%60x_coordinate_state_plane%60%2C%0A%20%20%60y_coordinate_state_plane%60%2C%0A%20%20%60open_data_channel_type%60%2C%0A%20%20%60park_facility_name%60%2C%0A%20%20%60park_borough%60%2C%0A%20%20%60vehicle_type%60%2C%0A%20%20%60taxi_company_borough%60%2C%0A%20%20%60taxi_pick_up_location%60%2C%0A%20%20%60bridge_highway_name%60%2C%0A%20%20%60bridge_highway_direction%60%2C%0A%20%20%60road_ramp%60%2C%0A%20%20%60bridge_highway_segment%60%2C%0A%20%20%60latitude%60%2C%0A%20%20%60longitude%60%2C%0A%20%20%60location%60%0AWHERE%0A%20%20%60created_date%60%0A%20%20%20%20BETWEEN%20%22${formattedPreviousDay}%22%20AND%20%22${formattedNextDay}%22%0AORDER%20BY%20%60created_date%60%20DESC%20LIMIT%2015000%20OFFSET%200`;
+	while (moreDataAvailable) {
+		const url = `${BASE_URL}?$limit=${LIMIT}&$offset=${offset}&$where=${encodeURIComponent(
+			WHERE_CLAUSE
+		)}`;
+		// console.log(`Fetching: ${url}`);
 
-    // Use d3.json to fetch the data
-    d3.json(previousDayData)
-        .then(function(data) {
-            // Log the data
-            console.log("Fetched Data: ", data);
-        })
-        .catch(function(error) {
-            console.error("Error fetching data: ", error);
-        });
-}
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
 
+			if (data.length > 0) {
+				allData = allData.concat(data); // append new data
+				offset += LIMIT; // increment offset for next page
+			} else {
+				moreDataAvailable = false; // stop when no more records
+			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
+			moreDataAvailable = false; // stop if error
+		}
+	}
 
-getPreviousDay();
+	return allData;
+};
+
+const data = await getData();
+// console.log(data);
+
+const formatDataByHour = () => {
+	return d3.group(
+		data,
+		(d) => {
+			const date = new Date(d.created_date);
+			const hour = date.getHours();
+			return hour; // Group by hour
+		},
+		(d) => d["complaint_type"]
+	);
+};
+
+const groupedByHour = formatDataByHour();
+console.log(groupedByHour);
+
+const formatDataByHourAndMinute = () => {
+	return d3.group(
+		data,
+		(d) => {
+			const date = new Date(d.created_date);
+			const hour = date.getHours();
+			return hour; // Group by hour
+		},
+		(d) => {
+			const date = new Date(d.created_date);
+			return date.getMinutes(); // Group by minute within each hour
+		}
+	);
+};
+
+const groupedByHourAndMinute = formatDataByHourAndMinute();
+console.log(groupedByHourAndMinute);
 
 app
-    .append('h1') // this adds an h1 tag to the html
-    .text("Feed Assignment - Minutes") // this adds the following text to the above h1 tag
-    .style("color", "rgba(0,255,255,0.5"); // call the attribute "color", and then state what you're changing it to (0.5 is transparency)
+	.append("h1") // this adds an h1 tag to the html
+	.text("Feed Assignment - Minutes") // this adds the following text to the above h1 tag
+	.style("color", "rgba(0,255,255,0.5"); // call the attribute "color", and then state what you're changing it to (0.5 is transparency)
 
-app
-    .append('p')
-    .text("Today's date is " + new Date());
+app.append("p").text("Today's date is " + new Date());
+
+// use setInterval to fetch data each new day
+
+// use setInterval to update data displayed each minute
