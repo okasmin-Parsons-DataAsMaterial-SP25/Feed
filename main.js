@@ -1,8 +1,6 @@
 import "./style.css";
 import * as d3 from "d3";
 
-const app = d3.select("#app");
-
 // Get today's date
 const today = new Date();
 const currentMinute = today.getMinutes();
@@ -53,7 +51,8 @@ const getData = async () => {
 };
 
 const data = await getData();
-// console.log(data);
+console.log("all data");
+console.log(data);
 
 const formatDataByHour = () => {
 	return d3.group(
@@ -62,13 +61,14 @@ const formatDataByHour = () => {
 			const date = new Date(d.created_date);
 			const hour = date.getHours();
 			return hour; // Group by hour
-		},
-		(d) => d["complaint_type"]
+		}
+		// (d) => d["complaint_type"]
 	);
 };
 
 const groupedByHour = formatDataByHour();
-console.log(groupedByHour);
+// console.log("data grouped by hour ");
+// console.log(groupedByHour);
 
 const formatDataByHourAndMinute = () => {
 	return d3.group(
@@ -86,15 +86,100 @@ const formatDataByHourAndMinute = () => {
 };
 
 const groupedByHourAndMinute = formatDataByHourAndMinute();
+console.log("data grouped by hour and then minute");
 console.log(groupedByHourAndMinute);
 
-app
-	.append("h1") // this adds an h1 tag to the html
-	.text("Feed Assignment - Minutes") // this adds the following text to the above h1 tag
-	.style("color", "rgba(0,255,255,0.5"); // call the attribute "color", and then state what you're changing it to (0.5 is transparency)
+const intro = d3.select("#intro");
+intro
+	.append("h1")
+	.text("Feed Assignment - Prototype")
+	.style("color", "rgba(0,255,255,0.5");
 
-app.append("p").text("Today's date is " + new Date());
+// intro.append("p").text("Today's date is " + new Date());
 
-// use setInterval to fetch data each new day
+const minutesDiv = d3.select("#minutes");
+const renderCurrentMinute = () => {
+	minutesDiv.selectAll("*").remove();
+	minutesDiv.append("h1").text("minutes");
 
-// use setInterval to update data displayed each minute
+	const date = new Date();
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+	// TODO maybe render in order or sseconds?
+	// const seconds = date.getSeconds();
+
+	// get data for current minute
+	const hourData = groupedByHourAndMinute.get(hours);
+	const minuteData = hourData.get(minutes);
+
+	minutesDiv.append("div").text(`${hours}:${minutes}`);
+	minuteData.forEach((data) => {
+		minutesDiv.append("li").text(`${data.complaint_type}: ${data.descriptor}`);
+	});
+};
+
+// show data for current minute and rerun fuction each second so it updates with each minute
+renderCurrentMinute();
+setInterval(renderCurrentMinute, 1000);
+
+const addPercentage = (data) => {
+	let total = 0;
+	data.forEach((d) => (total += Number(d[1])));
+	const withPercent = data.map((d) => {
+		const percent = Number(d[1]) / Number(total);
+		return [...d, percent];
+	});
+	// console.log(withPercent);
+	return withPercent;
+};
+
+const sumComplaintTypes = (data) => {
+	const grouped = d3.rollup(
+		data,
+		(v) => v.length,
+		(d) => d["complaint_type"]
+	);
+
+	const sorted = Array.from(grouped).sort((a, b) => b[1] - a[1]);
+	return addPercentage(sorted);
+};
+
+const getBucketData = (offset) => {
+	const bucketArr = [];
+	for (let i = offset; i < offset + 4; i++) {
+		const hourData = groupedByHour.get(i);
+		bucketArr.push(...hourData);
+	}
+
+	return sumComplaintTypes(bucketArr);
+};
+
+const quizDiv = d3.select("#quiz");
+const renderHourBuckets = () => {
+	quizDiv.append("h1").text("quiz");
+
+	// put data into 4 hr buckets
+	const buckets = [];
+	let offset = 0;
+	for (let i = 0; i < 6; i++) {
+		buckets.push(getBucketData(offset));
+		offset += 4;
+	}
+
+	// render data for each bucket
+	let offset2 = 0;
+	for (let i = 0; i < buckets.length; i++) {
+		quizDiv.append("h4").text(`${offset2} - ${offset2 + 4}hrs`);
+		buckets[i].slice(0, 4).forEach((data) => {
+			quizDiv
+				.append("li")
+				.text(`${data[0]}: ${data[1]} (%${Math.round(data[2] * 100)})`);
+		});
+		offset2 += 4;
+	}
+
+	console.log("quiz buckets");
+	console.log(buckets);
+};
+
+renderHourBuckets();
