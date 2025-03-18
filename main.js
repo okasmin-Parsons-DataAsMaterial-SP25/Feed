@@ -1,5 +1,6 @@
 import "./style.css";
 import * as d3 from "d3";
+import { getComplaintTypes } from "./utils";
 
 // Get today's date
 const today = new Date();
@@ -183,3 +184,6 @@ const renderHourBuckets = () => {
 };
 
 renderHourBuckets();
+
+const complaintTypes = getComplaintTypes(data);
+console.log(complaintTypes);
