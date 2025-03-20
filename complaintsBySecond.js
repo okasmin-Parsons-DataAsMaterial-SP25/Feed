@@ -52,8 +52,9 @@ export const renderComplaintsBySecond = (data) => {
 			secondData.forEach((data) => {
 				// data &&
 				secondssDiv
-					.append("li")
-					.text(`${data.complaint_type}: ${data.descriptor}`);
+					.append("p")
+					.text(`${data.complaint_type}: ${data.descriptor}`)
+					.attr("class", "complaint");
 			});
 	};
 
