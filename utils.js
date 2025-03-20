@@ -1,23 +1,46 @@
-// export const formatMessage = (complaint) => {
-// 	const type = complaint["complaint_type"];
-// 	const descriptor = complaint["descriptor"];
-// 	const street1 = complaint["cross_street_1"];
-// 	const street2 = complaint["cross_street_2"];
-// 	const zip = complaint["incident_zip"];
+/**
+ * Fetch NYC Open Data 311 Complaints
+ * Fetch paginated data 1000 at a time
+ * (NYC Open Data returns 1000 at a time by default)
+ */
+export const getData = async (start, end) => {
+	const BASE_URL = `https://data.cityofnewyork.us/resource/erm2-nwe9.json`;
+	const LIMIT = 1000; // records per request
+	let offset = 0; // start at first record
+	let allData = []; // store all results
+	const WHERE_CLAUSE = `created_date between'${start}'and'${end}'`;
 
-// 	const descriptorText = descriptor
-// 		? `- and specifically the ${descriptor} -`
-// 		: "";
+	let moreDataAvailable = true;
 
-// 	// return `the ${type}${descriptorText} at the corner of ${street1} and ${street2} in ${zip} are a huge $%#@! problem.`;
+	while (moreDataAvailable) {
+		const url = `${BASE_URL}?$limit=${LIMIT}&$offset=${offset}&$where=${encodeURIComponent(
+			WHERE_CLAUSE
+		)}`;
+		// console.log(`Fetching: ${url}`);
 
-// 	const line1 = `my huge $%#@! problem: ${type}`;
-// 	const line2 = descriptor
-// 		? `details: specifically the ${descriptor}`
-// 		: undefined;
-// 	const line3 = `location: at the corner of ${street1} and ${street2} in ${zip}`;
-// };
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
 
+			if (data.length > 0) {
+				allData = allData.concat(data); // append new data
+				offset += LIMIT; // increment offset for next page
+			} else {
+				moreDataAvailable = false; // stop when no more records
+			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
+			moreDataAvailable = false; // stop if error
+		}
+	}
+
+	return allData;
+};
+
+/**
+ * Can use this function to examine all complaint types
+ * and relevant descriptions for the data
+ */
 export const getComplaintTypes = (data) => {
 	const types = [];
 	const typesDescriptionMap = new Map();
@@ -37,6 +60,7 @@ export const getComplaintTypes = (data) => {
 	const uniqueTypes = new Set(types);
 
 	console.log(typesDescriptionMap);
+	console.log(uniqueTypes);
 
 	return uniqueTypes;
 };
