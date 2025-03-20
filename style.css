@@ -14,11 +14,13 @@
 	}
 	100% {
 		/* transform: translateY(0%); */
-		opacity: 0.2;
+		opacity: 0.1;
 	}
 }
 
 .complaint {
-	animation: 5s fade forwards;
+	animation: 15s fade forwards;
 	color: blue;
+	background-color: antiquewhite;
+	padding: 10px;
 }
