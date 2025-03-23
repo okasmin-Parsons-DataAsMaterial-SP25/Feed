@@ -1,27 +1,9 @@
 import "./style.css";
 import * as d3 from "d3";
-
-/**
- * Return js Map with data grouped by hour, then minute, then second
- */
-const formatDataByHourAndMinuteAndSeconds = (data) => {
-	return d3.group(
-		data,
-		(d) => {
-			const date = new Date(d.created_date);
-			const hour = date.getHours();
-			return hour; // Group by hour
-		},
-		(d) => {
-			const date = new Date(d.created_date);
-			return date.getMinutes(); // Group by minute within each hour
-		},
-		(d) => {
-			const date = new Date(d.created_date);
-			return date.getSeconds(); // Group by seconds within each minute
-		}
-	);
-};
+import {
+	formatDataByHourAndMinuteAndSeconds,
+	getMajorityComplaintType,
+} from "./utils";
 
 /**
  * Helper functions to determine placement of each complaint
@@ -107,19 +89,19 @@ export const renderComplaintsBySecond = (data) => {
 					.style("position", "absolute")
 					.style("left", `${x}px`)
 					.style("top", `${y}px`);
-					
-					// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
-					const fonts = [
-						'"Permanent Marker", cursive',
-						'"Just Me Again Down Here", cursive',
-						'"Caveat", cursive'
-					  ];
-					  
-					  // Select all divs with class 'complaint'
-					  const complaints = document.querySelectorAll('.complaint');
-					  
-					  const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
-					  secondssDiv.style("font-family", randomFont);
+
+				// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
+				const fonts = [
+					'"Permanent Marker", cursive',
+					'"Just Me Again Down Here", cursive',
+					'"Caveat", cursive',
+				];
+
+				// Select all divs with class 'complaint'
+				const complaints = document.querySelectorAll(".complaint");
+
+				const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+				secondssDiv.style("font-family", randomFont);
 			});
 	};
 

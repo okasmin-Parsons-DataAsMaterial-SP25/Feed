@@ -1,15 +1,15 @@
 import "./style.css";
 import * as d3 from "d3";
-import { totalComplaintsDay, currentMajorityComplaintType } from "./utils";
+import { formatHourRange, getMajorityComplaintType } from "./utils";
 
-export const renderInfo = () => {
+export const renderInfo = (data) => {
 	const info = d3.select("body").append("div").attr("id", "info");
 
 	info.append("h1").text("How Frustrated Are New Yorkers?");
 	info
 		.append("p")
 		.text(
-			"A second-by-second visualization of a day of complaints in New York City."
+			"A second-by-second visualization of a day of 311 service requests in New York City."
 		);
 	info
 		.append("p")
@@ -19,9 +19,9 @@ export const renderInfo = () => {
 
 	const liveInfo = d3.select("body").append("div").attr("id", "live-info");
 
-	const startHour = 9;
-	const endHour = 17;
-	const complaintType = currentMajorityComplaintType.type;
+	const currentHour = new Date().getHours();
+	const complaintType = getMajorityComplaintType(data).type;
+	const totalComplaintsDay = data.length;
 
 	liveInfo
 		.append("p")
@@ -31,7 +31,9 @@ export const renderInfo = () => {
 	liveInfo
 		.append("p")
 		.html(
-			`A majority of those complaints were between <span id="infoHighlight">${startHour}</span> and <span id="infoHighlight">${endHour}</span> in the category of <span id="infoHighlight">${complaintType}</span>.`
+			`The majority of those complaints from <span id="infoHighlight">${formatHourRange(
+				currentHour
+			)}</span> were related to <span id="infoHighlight">${complaintType}</span>.`
 		);
 
 	const footer = info.append("div").attr("id", "footer");
