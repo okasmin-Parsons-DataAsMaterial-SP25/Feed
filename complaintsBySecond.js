@@ -141,7 +141,7 @@ export const renderComplaintsBySecond = (data) => {
 					.attr("class", "complaint")
 					.style("position", "absolute")
 					.style("left", `${x - textWidth / 2}px`)
-					.style("top", `${y - textHeight / 2}px`)
+					.style("top", `${y - textHeight / 2 - 20}px`)
 					.style("width", `${textWidth}px`)
 					.style("height", `${textHeight}px`)
 					.style("font-size", "14pt");
@@ -155,6 +155,8 @@ export const renderComplaintsBySecond = (data) => {
 					'"Permanent Marker", cursive',
 					'"Just Me Again Down Here", cursive',
 					'"Caveat", cursive',
+					'"Reenie Beanie", cursive',
+					'"Mansalva", sans-serif'
 				];
 
 				// Select all divs with class 'complaint'
