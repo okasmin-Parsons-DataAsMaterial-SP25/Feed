@@ -103,6 +103,32 @@ export const renderComplaintsBySecond = (data) => {
 			}
 		};
 
+				// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
+				const fonts = [
+					'"Permanent Marker", cursive',
+					'"Just Me Again Down Here", cursive',
+					'"Caveat", cursive',
+					'"Reenie Beanie", cursive',
+					'"Mansalva", sans-serif'
+				];
+				
+				const addFonts = (borough) => {
+					switch (borough) {
+						case "MANHATTAN":
+							return fonts[2]; // Caveat
+						case "BROOKLYN":
+							return fonts[0]; // Permanent Marker
+						case "BRONX":
+							return fonts[4]; // Mansalva
+						case "QUEENS":
+							return fonts[1]; // Just Me Again Down Here
+						case "STATEN ISLAND":
+							return fonts[3]; // Reenie Beanie
+						default:
+							return "Arial, sans-serif"; // Fallback font
+					}
+				};
+
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
 			secondData.forEach((data) => {
@@ -145,20 +171,12 @@ export const renderComplaintsBySecond = (data) => {
 					.style("top", `${y - textHeight / 2 - 20}px`)
 					.style("width", `${textWidth}px`)
 					.style("height", `${textHeight}px`)
-					.style("font-size", "14pt");
+					.style("font-size", "14pt")
+					.style("font-family", addFonts(data.borough));
 
 				if (data.complaint_type === majorityType) {
 					newComplaint.style("color", getHourColor(hours));
 				}
-
-				// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
-				const fonts = [
-					'"Permanent Marker", cursive',
-					'"Just Me Again Down Here", cursive',
-					'"Caveat", cursive',
-					'"Reenie Beanie", cursive',
-					'"Mansalva", sans-serif'
-				];
 
 				// Select all divs with class 'complaint'
 				// const complaints = document.querySelectorAll(".complaint");
