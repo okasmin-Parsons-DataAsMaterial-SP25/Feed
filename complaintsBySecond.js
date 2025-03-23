@@ -134,13 +134,13 @@ export const renderComplaintsBySecond = (data) => {
 			secondData.forEach((data) => {
 				const { x, y } = getNonOverlappingPosition();
 
-				// Center X
+/* 				// Center X
 				secondssDiv
 					.append("div")
 					.text("X")
 					.style("position", "absolute")
 					.style("left", `${x}px`)
-					.style("top", `${y}px`);
+					.style("top", `${y}px`); */
 
 				const scale = 0.5;
 
