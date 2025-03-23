@@ -20,42 +20,47 @@
 
 .complaint {
 	animation: 15s fade forwards;
-	color: blue;
-	background-color: antiquewhite;
+	color: black;
+	background-color: white;
+	outline: 1px solid black;
 	padding: 10px;
 	max-width: 400px;
 	text-align: center;
 	font-size: 18pt;
 }
 
+.majorityComplaint {
+	color: blue;
+}
+
 #toggleInfo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ddd;
-    color: #333;
-    font-size: 20px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: background 0.3s ease, transform 0.2s ease;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #ddd;
+	color: #333;
+	font-size: 20px;
+	font-weight: bold;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	transition: background 0.3s ease, transform 0.2s ease;
 }
 
 #toggleInfo:hover {
-    transform: scale(1.1);
+	transform: scale(1.1);
 }
 
 /* Style when info is shown */
 #toggleInfo.active {
-    background-color: #00aaff;
-    color: #fff;
+	background-color: #00aaff;
+	color: #fff;
 }
 
 #info {
@@ -64,28 +69,27 @@
 	margin: 0px 40px 0px 40px;
 }
 
-
 #live-info {
-	display: flex;              
-	justify-content: center;    
-	align-items: center;         
-	text-align: center;         
-	flex-direction: column;     
-	position: absolute;  
-	top: 50%; 
-	left: 50%;        
-	transform: translate(-50%, -50%); 
-	width: 100%;       
-	max-width: 1200px;     
-  }
-  
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	flex-direction: column;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	max-width: 1200px;
+}
 
-#info h1{
+#info h1 {
 	font-family: "Voltaire", sans-serif;
 	font-size: 40pt;
 }
 
-#info p, #live-info p {
+#info p,
+#live-info p {
 	font-family: "Cormorant Garamond", serif;
 	font-size: 16pt;
 }
@@ -103,4 +107,12 @@
 #footer p {
 	font-family: "Voltaire", sans-serif;
 	font-size: 10pt;
+}
+
+#clock {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	font-family: monospace;
+	font-size: 2rem;
 }

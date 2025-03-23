@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { getData } from "./utils";
 import { renderInfo } from "./info";
 import { renderComplaintsBySecond } from "./complaintsBySecond";
+import { renderClock } from "./clock";
 
 /**
  * GET DATA
@@ -22,14 +23,13 @@ const formattedOneWeekAgoEnd =
 	oneWeekAgo.toISOString().split("T")[0] + "T23:59:59";
 
 const data = await getData(formattedOneWeekAgoStart, formattedOneWeekAgoEnd);
-// console.log("all data");
-// console.log(data);
 
 /**
  * RENDER COMPONENTS
  */
 
 renderComplaintsBySecond(data);
+renderClock();
 
 // Create a circular "info" button with an "i" icon
 const button = d3

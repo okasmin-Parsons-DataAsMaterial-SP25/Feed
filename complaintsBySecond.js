@@ -75,12 +75,14 @@ export const renderComplaintsBySecond = (data) => {
 		const minuteData = hourData.get(minutes);
 		const secondData = minuteData.get(seconds);
 
+		const majorityType = getMajorityComplaintType(data).type;
+
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
 			secondData.forEach((data) => {
 				const { x, y } = getNonOverlappingPosition();
 
-				secondssDiv
+				const newComplaint = secondssDiv
 					.append("p")
 					.html(
 						`${hours}:${minutes}:${seconds}<br><strong>${data.complaint_type}</strong><br>${data.descriptor}`
@@ -90,6 +92,10 @@ export const renderComplaintsBySecond = (data) => {
 					.style("left", `${x}px`)
 					.style("top", `${y}px`);
 
+				if (data.complaint_type === majorityType) {
+					newComplaint.classed("majorityComplaint", true);
+				}
+
 				// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
 				const fonts = [
 					'"Permanent Marker", cursive',
@@ -98,14 +104,16 @@ export const renderComplaintsBySecond = (data) => {
 				];
 
 				// Select all divs with class 'complaint'
-				const complaints = document.querySelectorAll(".complaint");
+				// const complaints = document.querySelectorAll(".complaint");
 
-				const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
-				secondssDiv.style("font-family", randomFont);
+				// const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+				// secondssDiv.style("font-family", randomFont);
 			});
 	};
 
-	// show data for current minute and rerun fuction each second so it updates with each minute
+	// initial render
 	renderCurrentSecond();
+
+	// update every second
 	setInterval(renderCurrentSecond, 1000);
 };
