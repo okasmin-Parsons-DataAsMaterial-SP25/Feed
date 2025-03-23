@@ -164,3 +164,26 @@ export function formatHourRange(hour) {
 #df3527,
 #c0223a
  */
+
+const colors = [
+	"#792368",
+	"#443377",
+	"#2c498b",
+	"#14689c",
+	"#0b7669",
+	"#2a8842",
+	"#a3bd3b",
+	"#e9ab19",
+	"#f68c1f",
+	"#e45d25",
+	"#df3527",
+	"#c0223a",
+];
+
+export const getHourColor = (hour) => {
+	if (hour < 12) {
+		return colors[hour];
+	} else {
+		return colors[hour - 12];
+	}
+};

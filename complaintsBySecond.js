@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import {
 	formatDataByHourAndMinuteAndSeconds,
 	getMajorityComplaintType,
+	getHourColor,
 } from "./utils";
 
 /**
@@ -147,7 +148,7 @@ export const renderComplaintsBySecond = (data) => {
 					.style("font-size", "14pt");
 
 				if (data.complaint_type === majorityType) {
-					newComplaint.classed("majorityComplaint", true);
+					newComplaint.style("color", getHourColor(hours));
 				}
 
 				// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
