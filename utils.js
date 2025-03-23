@@ -148,3 +148,19 @@ export function formatHourRange(hour) {
 
 // TODO
 // function to check if need to re-fetch data (today doesn't make fetch data)
+
+// COLORS
+/* 
+#792368, 
+#443377,
+#2c498b,
+#14689c,
+#0b7669,
+#2a8842,
+#a3bd3b,
+#e9ab19,
+#f68c1f,
+#e45d25,
+#df3527,
+#c0223a
+ */
