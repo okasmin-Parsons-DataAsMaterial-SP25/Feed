@@ -64,3 +64,10 @@ export const getComplaintTypes = (data) => {
 
 	return uniqueTypes;
 };
+
+export const totalComplaintsDay = 5000; // placeholder number - Olivia to fill in
+
+export const currentMajorityComplaintType = {
+	type: "Noise", // placeholder type
+	color: "#00FF00", //placeholder color
+}; //Olivia to fill in
