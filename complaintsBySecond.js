@@ -4,22 +4,29 @@ import {
 	formatDataByHourAndMinuteAndSeconds,
 	getMajorityComplaintType,
 	getHourColor,
+	formatTime,
 } from "./utils";
 
 /**
  * Helper functions to determine placement of each complaint
  */
-// TODO define rect size of each complaint and update buffer to take width & height into account
-// TODO may want to limit to parent div rect rather than entire width/height of browser
 const placementDims = {
 	width: window.innerWidth,
 	height: window.innerHeight,
-	buffer: 200,
+	buffer: 300,
 	margins: {
 		width: 200,
 		height: 200,
 	},
 };
+
+const scale = 0.5;
+
+const imageWidth = 1000 * scale;
+const imageHeight = 700 * scale;
+
+const textWidth = 400 * scale;
+const textHeight = 200 * scale;
 
 const pastPlacements = []; // store last 10 positions
 
@@ -38,12 +45,16 @@ function getNonOverlappingPosition() {
 	let x, y;
 	let attempts = 0;
 	do {
-		x = Math.floor(
-			Math.random() * (placementDims.width - placementDims.margins.width)
-		);
-		y = Math.floor(
-			Math.random() * (placementDims.height - placementDims.margins.height)
-		);
+		x =
+			Math.floor(
+				Math.random() * (placementDims.width - placementDims.margins.width)
+			) +
+			imageWidth / 2;
+		y =
+			Math.floor(
+				Math.random() * (placementDims.height - placementDims.margins.height)
+			) +
+			imageHeight / 2;
 		attempts++;
 		if (attempts > 100) break; // avoid infinite loops
 	} while (isOverlapping(x, y));
@@ -103,49 +114,36 @@ export const renderComplaintsBySecond = (data) => {
 			}
 		};
 
-				// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
-				const fonts = [
-					'"Permanent Marker", cursive',
-					'"Just Me Again Down Here", cursive',
-					'"Caveat", cursive',
-					'"Reenie Beanie", cursive',
-					'"Mansalva", sans-serif'
-				];
-				
-				const addFonts = (borough) => {
-					switch (borough) {
-						case "MANHATTAN":
-							return fonts[2]; // Caveat
-						case "BROOKLYN":
-							return fonts[0]; // Permanent Marker
-						case "BRONX":
-							return fonts[4]; // Mansalva
-						case "QUEENS":
-							return fonts[1]; // Just Me Again Down Here
-						case "STATEN ISLAND":
-							return fonts[3]; // Reenie Beanie
-						default:
-							return "Arial, sans-serif"; // Fallback font
-					}
-				};
+		// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
+		const fonts = [
+			'"Permanent Marker", cursive',
+			'"Just Me Again Down Here", cursive',
+			'"Caveat", cursive',
+			'"Reenie Beanie", cursive',
+			'"Mansalva", sans-serif',
+		];
+
+		const addFonts = (borough) => {
+			switch (borough) {
+				case "MANHATTAN":
+					return fonts[2]; // Caveat
+				case "BROOKLYN":
+					return fonts[0]; // Permanent Marker
+				case "BRONX":
+					return fonts[4]; // Mansalva
+				case "QUEENS":
+					return fonts[1]; // Just Me Again Down Here
+				case "STATEN ISLAND":
+					return fonts[3]; // Reenie Beanie
+				default:
+					return "Arial, sans-serif"; // Fallback font
+			}
+		};
 
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
 			secondData.forEach((data) => {
 				const { x, y } = getNonOverlappingPosition();
-
-/* 				// Center X
-				secondssDiv
-					.append("div")
-					.text("X")
-					.style("position", "absolute")
-					.style("left", `${x}px`)
-					.style("top", `${y}px`); */
-
-				const scale = 0.5;
-
-				const imageWidth = 1000 * scale;
-				const imageHeight = 700 * scale;
 
 				secondssDiv
 					.append("img")
@@ -157,13 +155,12 @@ export const renderComplaintsBySecond = (data) => {
 					.style("width", `${imageWidth}px`)
 					.style("height", `${imageHeight}px`);
 
-				const textWidth = 400 * scale;
-				const textHeight = 200 * scale;
+				const timeString = formatTime(hours, minutes, seconds);
 
 				const newComplaint = secondssDiv
 					.append("p")
 					.html(
-						`${hours}:${minutes}:${seconds}<br>${data.complaint_type}<br>${data.descriptor}<br>${data.incident_zip}`
+						`${timeString}<br>${data.complaint_type}<br>${data.descriptor}<br>${data.incident_zip}`
 					)
 					.attr("class", "complaint")
 					.style("position", "absolute")
@@ -177,21 +174,8 @@ export const renderComplaintsBySecond = (data) => {
 				if (data.complaint_type === majorityType) {
 					newComplaint.style("color", getHourColor(hours));
 				}
-
-				// Select all divs with class 'complaint'
-				// const complaints = document.querySelectorAll(".complaint");
-
-				// const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
-				// secondssDiv.style("font-family", randomFont);
 			});
 	};
-
-	const secondssSvg = d3
-		.select("body")
-		.append("svg")
-		.attr("id", "secondss-svg")
-		.attr("width", window.innerWidth)
-		.attr("height", window.innerHeight);
 
 	// initial render
 	renderCurrentSecond();

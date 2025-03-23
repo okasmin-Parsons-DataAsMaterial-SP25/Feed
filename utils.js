@@ -187,3 +187,11 @@ export const getHourColor = (hour) => {
 		return colors[hour - 12];
 	}
 };
+
+export const formatTime = (h, m, s) => {
+	const hh = String(h).padStart(2, "0");
+	const mm = String(m).padStart(2, "0");
+	const ss = String(s).padStart(2, "0");
+
+	return `${hh}:${mm}:${ss}`;
+};

@@ -22,20 +22,15 @@
 }
 
 .complaint {
-	/* width: 400px; */
-	/* height: 200px; */
 	animation: 15s fade forwards;
 	color: black;
-	/* background-color: white; */
-	/* outline: 1px solid black; */
+	background-color: white;
 	padding: 10px;
 	text-align: center;
-	/* font-size: 14pt; */
-
 	display: flex;
-	justify-content: center; /* Center vertically */
-	align-items: center; /* Center horizontally */
-	flex-direction: column; /* Stack lines vertically */
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 	box-sizing: border-box;
 }
 
@@ -125,4 +120,8 @@
 	right: 10px;
 	font-family: monospace;
 	font-size: 2rem;
+}
+
+button {
+	z-index: 100;
 }

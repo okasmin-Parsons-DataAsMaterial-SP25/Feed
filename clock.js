@@ -1,14 +1,19 @@
 import "./style.css";
 import * as d3 from "d3";
+import { formatTime } from "./utils";
 
 const clockDiv = d3.select("#clock");
 
 const updateClock = () => {
 	const today = new Date();
-	const hh = String(today.getHours()).padStart(2, "0");
-	const mm = String(today.getMinutes()).padStart(2, "0");
-	const ss = String(today.getSeconds()).padStart(2, "0");
-	clockDiv.text(`${hh}:${mm}:${ss}`);
+
+	const h = today.getHours();
+	const m = today.getMinutes();
+	const s = today.getSeconds();
+
+	const timeString = formatTime(h, m, s);
+
+	clockDiv.text(`${timeString}`);
 };
 
 export const renderClock = () => {
