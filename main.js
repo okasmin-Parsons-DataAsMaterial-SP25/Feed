@@ -23,6 +23,7 @@ const formattedOneWeekAgoEnd =
 	oneWeekAgo.toISOString().split("T")[0] + "T23:59:59";
 
 const data = await getData(formattedOneWeekAgoStart, formattedOneWeekAgoEnd);
+console.log(data);
 
 /**
  * RENDER COMPONENTS

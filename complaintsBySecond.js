@@ -78,18 +78,42 @@ export const renderComplaintsBySecond = (data) => {
 		const minuteData = hourData.get(minutes);
 		const secondData = minuteData.get(seconds);
 
+		const bubbleImages = [
+			"bubble1.svg",
+			"bubble2.svg",
+			"bubble3.svg",
+			"bubble4.svg",
+			"bubble5.svg",
+		];
+
+		const getImageSrc = (borough) => {
+			if (borough === "MANHATTAN") {
+				return bubbleImages[0];
+			} else if (borough === "BROOKLYN") {
+				return bubbleImages[1];
+			} else if (borough === "BRONX") {
+				return bubbleImages[2];
+			} else if (borough === "QUEENS") {
+				return bubbleImages[3];
+			} else if (borough === "STATEN ISLAND") {
+				return bubbleImages[4];
+			} else {
+				return bubbleImages[Math.floor(Math.random() * bubbleImages.length)];
+			}
+		};
+
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
 			secondData.forEach((data) => {
 				const { x, y } = getNonOverlappingPosition();
 
 				// Center X
-				// secondssDiv
-				// 	.append("div")
-				// 	.text("X")
-				// 	.style("position", "absolute")
-				// 	.style("left", `${x}px`)
-				// 	.style("top", `${y}px`);
+				secondssDiv
+					.append("div")
+					.text("X")
+					.style("position", "absolute")
+					.style("left", `${x}px`)
+					.style("top", `${y}px`);
 
 				const scale = 0.5;
 
@@ -98,7 +122,7 @@ export const renderComplaintsBySecond = (data) => {
 
 				secondssDiv
 					.append("img")
-					.attr("src", "bubble1.svg")
+					.attr("src", getImageSrc(data.borough))
 					.attr("class", "bubble")
 					.style("position", "absolute")
 					.style("left", `${x - imageWidth / 2}px`)
