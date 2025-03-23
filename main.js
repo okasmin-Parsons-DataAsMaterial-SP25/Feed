@@ -29,5 +29,27 @@ const data = await getData(formattedOneWeekAgoStart, formattedOneWeekAgoEnd);
  * RENDER COMPONENTS
  */
 
-renderInfo();
 renderComplaintsBySecond(data);
+
+
+// Create a circular "info" button with an "i" icon
+const button = d3.select("body").append("button")
+    .attr("id", "toggleInfo")
+    .html("i");
+
+// Set up button click behavior
+let infoCreated = false;
+
+button.on("click", () => {
+    let info = d3.select("#info");
+
+    // Create the info content only on the first click
+    if (!infoCreated) {
+        renderInfo();
+        info = d3.select("#info"); // Re-select after render
+        infoCreated = true;
+    }
+	const isHidden = info.classed("show");
+	info.classed("show", !isHidden);
+	button.classed("active", !isHidden);
+});
