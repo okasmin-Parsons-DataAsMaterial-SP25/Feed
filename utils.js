@@ -145,3 +145,6 @@ export function formatHourRange(hour) {
 // TODO
 // make sure current hour complaint type updates live in case have open when hour changes
 // probably need to call on setInterval
+
+// TODO
+// function to check if need to re-fetch data (today doesn't make fetch data)

@@ -31,26 +31,21 @@ const data = await getData(formattedOneWeekAgoStart, formattedOneWeekAgoEnd);
 renderComplaintsBySecond(data);
 renderClock();
 
-// Create a circular "info" button with an "i" icon
-const button = d3
-	.select("body")
-	.append("button")
-	.attr("id", "toggleInfo")
-	.html("i");
+// ensure info screen is hidden initially
+const infoDiv = d3.select("#info");
+infoDiv.style("display", "none");
+renderInfo(data);
 
-// Set up button click behavior
-let infoCreated = false;
+/**
+ * BUTTON TO TOGGLE INFO
+ */
+const button = d3.select("#toggleInfo");
 
-button.on("click", () => {
-	let info = d3.select("#info");
+const onToggleInfo = () => {
+	const isHidden = infoDiv.style("display") === "none";
 
-	// Create the info content only on the first click
-	if (!infoCreated) {
-		renderInfo(data);
-		info = d3.select("#info"); // Re-select after render
-		infoCreated = true;
-	}
-	const isHidden = info.classed("show");
-	info.classed("show", !isHidden);
-	button.classed("active", !isHidden);
-});
+	infoDiv.style("display", isHidden ? "block" : "none");
+	button.classed("active", isHidden);
+};
+
+button.on("click", onToggleInfo);

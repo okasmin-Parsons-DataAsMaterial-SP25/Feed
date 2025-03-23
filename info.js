@@ -3,8 +3,7 @@ import * as d3 from "d3";
 import { formatHourRange, getMajorityComplaintType } from "./utils";
 
 export const renderInfo = (data) => {
-	const info = d3.select("body").append("div").attr("id", "info");
-
+	const info = d3.select("#info");
 	info.append("h1").text("How Frustrated Are New Yorkers?");
 	info
 		.append("p")
@@ -17,7 +16,7 @@ export const renderInfo = (data) => {
 			"Complaints are shown at the exact time they were filed, at this time a week ago."
 		);
 
-	const liveInfo = d3.select("body").append("div").attr("id", "live-info");
+	const liveInfo = info.append("div").attr("id", "live-info");
 
 	const currentHour = new Date().getHours();
 	const complaintType = getMajorityComplaintType(data).type;
@@ -42,7 +41,4 @@ export const renderInfo = (data) => {
 		.html(
 			`Designers: Olivia Kasmin & Lisa Sakai Quinley | <a href="https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9/data_preview" target="_blank">Data Source: 311 Service Requests New York City Open Data</a>`
 		);
-
-	// Ensure it's hidden initially after creation
-	d3.select("#info").style("display", "none");
 };
