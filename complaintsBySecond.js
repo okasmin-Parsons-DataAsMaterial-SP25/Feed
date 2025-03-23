@@ -63,7 +63,10 @@ export const renderComplaintsBySecond = (data) => {
 	const groupedByHourAndMinuteAndSeconds =
 		formatDataByHourAndMinuteAndSeconds(data);
 
+	const majorityType = getMajorityComplaintType(data).type;
+
 	const secondssDiv = d3.select("#seconds");
+
 	const renderCurrentSecond = () => {
 		const date = new Date();
 		const hours = date.getHours();
@@ -75,22 +78,49 @@ export const renderComplaintsBySecond = (data) => {
 		const minuteData = hourData.get(minutes);
 		const secondData = minuteData.get(seconds);
 
-		const majorityType = getMajorityComplaintType(data).type;
-
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
 			secondData.forEach((data) => {
 				const { x, y } = getNonOverlappingPosition();
 
+				// Center X
+				// secondssDiv
+				// 	.append("div")
+				// 	.text("X")
+				// 	.style("position", "absolute")
+				// 	.style("left", `${x}px`)
+				// 	.style("top", `${y}px`);
+
+				const scale = 0.5;
+
+				const imageWidth = 1000 * scale;
+				const imageHeight = 700 * scale;
+
+				secondssDiv
+					.append("img")
+					.attr("src", "bubble1.svg")
+					.attr("class", "bubble")
+					.style("position", "absolute")
+					.style("left", `${x - imageWidth / 2}px`)
+					.style("top", `${y - imageHeight / 2}px`)
+					.style("width", `${imageWidth}px`)
+					.style("height", `${imageHeight}px`);
+
+				const textWidth = 400 * scale;
+				const textHeight = 200 * scale;
+
 				const newComplaint = secondssDiv
 					.append("p")
 					.html(
-						`${hours}:${minutes}:${seconds}<br><strong>${data.complaint_type}</strong><br>${data.descriptor}`
+						`${hours}:${minutes}:${seconds}<br>${data.complaint_type}<br>${data.descriptor}<br>${data.incident_zip}`
 					)
 					.attr("class", "complaint")
 					.style("position", "absolute")
-					.style("left", `${x}px`)
-					.style("top", `${y}px`);
+					.style("left", `${x - textWidth / 2}px`)
+					.style("top", `${y - textHeight / 2}px`)
+					.style("width", `${textWidth}px`)
+					.style("height", `${textHeight}px`)
+					.style("font-size", "14pt");
 
 				if (data.complaint_type === majorityType) {
 					newComplaint.classed("majorityComplaint", true);
@@ -110,6 +140,13 @@ export const renderComplaintsBySecond = (data) => {
 				// secondssDiv.style("font-family", randomFont);
 			});
 	};
+
+	const secondssSvg = d3
+		.select("body")
+		.append("svg")
+		.attr("id", "secondss-svg")
+		.attr("width", window.innerWidth)
+		.attr("height", window.innerHeight);
 
 	// initial render
 	renderCurrentSecond();

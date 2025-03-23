@@ -17,16 +17,26 @@
 		opacity: 0.1;
 	}
 }
+.bubble {
+	animation: 15s fade forwards;
+}
 
 .complaint {
+	/* width: 400px; */
+	/* height: 200px; */
 	animation: 15s fade forwards;
 	color: black;
 	background-color: white;
 	outline: 1px solid black;
 	padding: 10px;
-	max-width: 400px;
 	text-align: center;
-	font-size: 18pt;
+	/* font-size: 14pt; */
+
+	display: flex;
+	justify-content: center; /* Center vertically */
+	align-items: center; /* Center horizontally */
+	flex-direction: column; /* Stack lines vertically */
+	box-sizing: border-box;
 }
 
 .majorityComplaint {
