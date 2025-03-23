@@ -111,7 +111,8 @@ export const renderComplaintsBySecond = (data) => {
 					// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
 					const fonts = [
 						'"Permanent Marker", cursive',
-						'"Just Me Again Down Here", cursive'
+						'"Just Me Again Down Here", cursive',
+						'"Caveat", cursive'
 					  ];
 					  
 					  // Select all divs with class 'complaint'
