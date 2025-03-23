@@ -100,13 +100,25 @@ export const renderComplaintsBySecond = (data) => {
 
 				secondssDiv
 					.append("p")
-					.text(
-						`${hours}:${minutes}:${seconds} - ${data.complaint_type}: ${data.descriptor}`
+					.html(
+						`${hours}:${minutes}:${seconds}<br><strong>${data.complaint_type}</strong><br>${data.descriptor}`
 					)
 					.attr("class", "complaint")
 					.style("position", "absolute")
 					.style("left", `${x}px`)
 					.style("top", `${y}px`);
+					
+					// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
+					const fonts = [
+						'"Permanent Marker", cursive',
+						'"Just Me Again Down Here", cursive'
+					  ];
+					  
+					  // Select all divs with class 'complaint'
+					  const complaints = document.querySelectorAll('.complaint');
+					  
+					  const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+					  secondssDiv.style("font-family", randomFont);
 			});
 	};
 
