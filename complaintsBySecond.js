@@ -107,9 +107,8 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 				return bubbleImages[2];
 			} else if (borough === "QUEENS") {
 				return bubbleImages[3];
-			} else if (borough === "STATEN ISLAND") {
-				return bubbleImages[4];
 			} else {
+				//STATEN ISLAND
 				return bubbleImages[Math.floor(Math.random() * bubbleImages.length)];
 			}
 		};

@@ -57,12 +57,14 @@ export const getData = async () => {
  */
 export const getComplaintTypes = (data) => {
 	const types = [];
+	const boroughs = [];
 	const typesDescriptionMap = new Map();
 	data.forEach((d) => {
 		const type = d["complaint_type"];
 		const descriptor = d["descriptor"];
 
 		types.push(type);
+		boroughs.push(d["borough"]);
 
 		if (typesDescriptionMap.get(type) && descriptor) {
 			const curr = typesDescriptionMap.get(type);
@@ -72,9 +74,11 @@ export const getComplaintTypes = (data) => {
 		}
 	});
 	const uniqueTypes = new Set(types);
+	const uniqueBoroughs = new Set(boroughs);
 
 	console.log(typesDescriptionMap);
 	console.log(uniqueTypes);
+	console.log(uniqueBoroughs);
 
 	return uniqueTypes;
 };
