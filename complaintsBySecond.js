@@ -100,6 +100,7 @@ export const renderComplaintsBySecond = (data) => {
 
 		const getImageSrc = (borough) => {
 			if (borough === "MANHATTAN") {
+				// get the correct colour here and change the path.fill according to data
 				return bubbleImages[0];
 			} else if (borough === "BROOKLYN") {
 				return bubbleImages[1];
@@ -114,31 +115,56 @@ export const renderComplaintsBySecond = (data) => {
 			}
 		};
 
-		// this code changes the font of the complaints every second, I still need to figure out how to make it keep the font for already rendered complaints
-		const fonts = [
-			'"Permanent Marker", cursive',
-			'"Just Me Again Down Here", cursive',
-			'"Caveat", cursive',
-			'"Reenie Beanie", cursive',
-			'"Mansalva", sans-serif',
-		];
-
-		const addFonts = (borough) => {
+		const fontSizes = [
+			"16pt", // 0
+			"14pt", // 1
+			"18pt", // 2
+			"18pt", // 3
+			"18pt", // 4
+		  ];
+		  
+		  const getFontSize = (borough) => {
 			switch (borough) {
-				case "MANHATTAN":
-					return fonts[2]; // Caveat
-				case "BROOKLYN":
-					return fonts[0]; // Permanent Marker
-				case "BRONX":
-					return fonts[4]; // Mansalva
-				case "QUEENS":
-					return fonts[1]; // Just Me Again Down Here
-				case "STATEN ISLAND":
-					return fonts[3]; // Reenie Beanie
-				default:
-					return "Arial, sans-serif"; // Fallback font
+			  case "MANHATTAN":
+				return fontSizes[0]; // 16pt
+			  case "BROOKLYN":
+				return fontSizes[1]; // 14pt
+			  case "BRONX":
+				return fontSizes[2]; // 18pt
+			  case "QUEENS":
+				return fontSizes[3]; // 18pt
+			  case "STATEN ISLAND":
+				return fontSizes[4]; // 18pt
+			  default:
+				return fontSizes[Math.floor(Math.random() * fontSizes.length)];
 			}
-		};
+		  };
+		  
+		  const fonts = [
+			'"Permanent Marker", cursive', // 0
+			'"Just Me Again Down Here", cursive', // 1
+			'"Caveat", cursive', // 2
+			'"Reenie Beanie", cursive', // 3
+			'"Mansalva", sans-serif', // 4
+		  ];
+		  
+		  const addFonts = (borough) => {
+			switch (borough) {
+			  case "MANHATTAN":
+				return fonts[2]; // Caveat
+			  case "BROOKLYN":
+				return fonts[0]; // Permanent Marker
+			  case "BRONX":
+				return fonts[4]; // Mansalva
+			  case "QUEENS":
+				return fonts[1]; // Just Me Again Down Here
+			  case "STATEN ISLAND":
+				return fonts[3]; // Reenie Beanie
+			  default:
+				return "Arial, sans-serif"; // Fallback font
+			}
+		  };
+		  
 
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
@@ -155,21 +181,31 @@ export const renderComplaintsBySecond = (data) => {
 					.style("width", `${imageWidth}px`)
 					.style("height", `${imageHeight}px`);
 
+
 				const timeString = formatTime(hours, minutes, seconds);
+
+				function toTitleCase(str) {
+					return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+				}
 
 				const newComplaint = secondssDiv
 					.append("p")
 					.html(
-						`${timeString}<br>${data.complaint_type}<br>${data.descriptor}<br>${data.incident_zip}`
+						`${timeString}<br>${
+							toTitleCase(data.complaint_type) === toTitleCase(data.descriptor) 
+								? toTitleCase(data.complaint_type) 
+								: `${toTitleCase(data.complaint_type)}<br>${toTitleCase(data.descriptor)}`
+						}<br>${data.incident_zip}`
 					)
 					.attr("class", "complaint")
 					.style("position", "absolute")
 					.style("left", `${x - textWidth / 2}px`)
-					.style("top", `${y - textHeight / 2 - 20}px`)
+					.style("top", `${y - textHeight / 2 - 22.5}px`)
 					.style("width", `${textWidth}px`)
 					.style("height", `${textHeight}px`)
 					.style("font-size", "14pt")
-					.style("font-family", addFonts(data.borough));
+					.style("font-family", addFonts(data.borough))
+					.style("font-size", getFontSize(data.borough));
 
 				if (data.complaint_type === majorityType) {
 					newComplaint.style("color", getHourColor(hours));

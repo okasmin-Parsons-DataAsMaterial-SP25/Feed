@@ -2,7 +2,8 @@ import "./style.css";
 import * as d3 from "d3";
 import { formatTime } from "./utils";
 
-const clockDiv = d3.select("#clock");
+const clockDiv = d3.select("#clock")
+	.style("font-family", "'Voltaire', sans-serif");
 
 const updateClock = () => {
 	const today = new Date();

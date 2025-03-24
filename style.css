@@ -17,6 +17,7 @@
 		opacity: 0.1;
 	}
 }
+
 .bubble {
 	animation: 15s fade forwards;
 }
