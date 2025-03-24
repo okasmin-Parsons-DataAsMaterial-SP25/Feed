@@ -44,6 +44,24 @@ export const renderInfo = (data, majorityType) => {
 		);
 
 	d3.selectAll(".complaint-majority").style("color", majorityColor);
+
+	const legendBubbles = [
+		"./Manhattan.png",
+		"./Brooklyn.png",
+		"./Bronx.png",
+		"./Queens.png",
+		"./StatenIsland.png",
+	];
+	
+	// Add legend below the footer
+	const legend = info.append("div").attr("id", "legend");
+	
+	// Append each image
+	legendBubbles.forEach((src) => {
+		legend.append("img").attr("src", src).attr("class", "legend-image");
+	});	
+	
+
 };
 
 export const renderInfoButton = () => {

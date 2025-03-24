@@ -75,7 +75,7 @@
 	text-align: center;
 	flex-direction: column;
 	position: absolute;
-	top: 50%;
+	top: 65%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 100%;
@@ -127,4 +127,21 @@ body {
 
 a {
 	color: black;
+}
+
+
+#legend {
+	display: flex;
+	justify-content: center;
+	margin-top: 75px;
+}
+
+.legend-image {
+	width: 440px;
+	margin-left: -75px; /* Creates an overlap effect */
+}
+
+/* Make sure the first image doesn't pull to the left */
+.legend-image:first-child {
+	margin-left: 0;
 }
