@@ -17,7 +17,7 @@ const placementDims = {
 	margins: {
 		left: 10,
 		right: 10,
-		top: 0,
+		top: 6,
 		bottom: 10,
 	},
 };
@@ -114,13 +114,7 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 			}
 		};
 
-		const fontSizes = [
-			"16pt", // 0
-			"14pt", // 1
-			"18pt", // 2
-			"18pt", // 3
-			"18pt", // 4
-		];
+		const fontSizes = [16, 14, 18, 18, 18];
 
 		const getFontSize = (borough) => {
 			switch (borough) {
@@ -181,6 +175,9 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 				const timeString = formatTime(hours, minutes, seconds);
 				const complaintText = formatComplaintText(data);
 
+				let fontSize = getFontSize(data.borough);
+				if (complaintText.length > 40) fontSize *= 0.85;
+
 				const newComplaint = secondssDiv
 					.append("p")
 					.html(`${timeString}<br>${complaintText}${data.incident_zip}`)
@@ -190,9 +187,8 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 					.style("top", `${y - textHeight / 2 - 22.5}px`)
 					.style("width", `${textWidth}px`)
 					.style("height", `${textHeight}px`)
-					.style("font-size", "14pt")
 					.style("font-family", addFonts(data.borough))
-					.style("font-size", getFontSize(data.borough));
+					.style("font-size", `${fontSize}pt`);
 
 				if (data.complaint_type === majorityType) {
 					newComplaint.style("color", getHourColor(hours));

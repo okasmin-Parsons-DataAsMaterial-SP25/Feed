@@ -124,3 +124,25 @@ const renderHourBuckets = () => {
 };
 
 renderHourBuckets();
+
+/**
+ * OTHER NOTES
+ */
+
+/**
+ * UPDATE RENDERED DATA
+ * renderClock and renderComplaintsBySecond already run every second
+ */
+
+// end of every hour
+/**
+ * getMajorityComplaintType
+ * renderInfo
+ * renderInfoButton
+ * renderComplaintsBySecond
+ */
+
+// end of each day
+/**
+ *
+ */

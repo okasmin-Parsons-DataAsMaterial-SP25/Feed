@@ -5,6 +5,9 @@ import { renderInfo, renderInfoButton } from "./info";
 import { renderComplaintsBySecond } from "./complaintsBySecond";
 import { renderClock } from "./clock";
 
+// Render clock component first so it's visible while data loading
+renderClock();
+
 /**
  * GET DATA
  * fetch entire day's data for 1 week ago
@@ -21,7 +24,6 @@ const majorityType = getMajorityComplaintType(data).type;
  */
 
 renderComplaintsBySecond(data, majorityType);
-renderClock();
 
 // ensure info screen is hidden initially
 const infoDiv = d3.select("#info");
