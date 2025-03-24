@@ -15,8 +15,10 @@ const placementDims = {
 	height: window.innerHeight,
 	buffer: 300,
 	margins: {
-		width: 200,
-		height: 200,
+		left: 10,
+		right: 10,
+		top: 40,
+		bottom: 10,
 	},
 };
 
@@ -40,21 +42,20 @@ function isOverlapping(x, y) {
 	});
 }
 
+const xMin = placementDims.margins.left + imageWidth / 4;
+const xMax = placementDims.width - placementDims.margins.right - imageWidth / 4;
+
+const yMin = placementDims.margins.top + imageHeight / 2;
+const yMax =
+	placementDims.height - placementDims.margins.bottom - imageHeight / 4;
+
 // get a non-overlapping random position
 function getNonOverlappingPosition() {
 	let x, y;
 	let attempts = 0;
 	do {
-		x =
-			Math.floor(
-				Math.random() * (placementDims.width - placementDims.margins.width)
-			) +
-			imageWidth / 2;
-		y =
-			Math.floor(
-				Math.random() * (placementDims.height - placementDims.margins.height)
-			) +
-			imageHeight / 2;
+		x = Math.floor(Math.random() * (xMax - xMin + 1)) + xMin;
+		y = Math.floor(Math.random() * (yMax - yMin + 1)) + yMin;
 		attempts++;
 		if (attempts > 100) break; // avoid infinite loops
 	} while (isOverlapping(x, y));
@@ -91,11 +92,11 @@ export const renderComplaintsBySecond = (data) => {
 		const secondData = minuteData.get(seconds);
 
 		const bubbleImages = [
-			"bubble1.svg",
-			"bubble2.svg",
-			"bubble3.svg",
-			"bubble4.svg",
-			"bubble5.svg",
+			"./bubble1.svg",
+			"./bubble2.svg",
+			"./bubble3.svg",
+			"./bubble4.svg",
+			"./bubble5.svg",
 		];
 
 		const getImageSrc = (borough) => {
@@ -121,50 +122,49 @@ export const renderComplaintsBySecond = (data) => {
 			"18pt", // 2
 			"18pt", // 3
 			"18pt", // 4
-		  ];
-		  
-		  const getFontSize = (borough) => {
+		];
+
+		const getFontSize = (borough) => {
 			switch (borough) {
-			  case "MANHATTAN":
-				return fontSizes[0]; // 16pt
-			  case "BROOKLYN":
-				return fontSizes[1]; // 14pt
-			  case "BRONX":
-				return fontSizes[2]; // 18pt
-			  case "QUEENS":
-				return fontSizes[3]; // 18pt
-			  case "STATEN ISLAND":
-				return fontSizes[4]; // 18pt
-			  default:
-				return fontSizes[Math.floor(Math.random() * fontSizes.length)];
+				case "MANHATTAN":
+					return fontSizes[0]; // 16pt
+				case "BROOKLYN":
+					return fontSizes[1]; // 14pt
+				case "BRONX":
+					return fontSizes[2]; // 18pt
+				case "QUEENS":
+					return fontSizes[3]; // 18pt
+				case "STATEN ISLAND":
+					return fontSizes[4]; // 18pt
+				default:
+					return fontSizes[Math.floor(Math.random() * fontSizes.length)];
 			}
-		  };
-		  
-		  const fonts = [
+		};
+
+		const fonts = [
 			'"Permanent Marker", cursive', // 0
 			'"Just Me Again Down Here", cursive', // 1
 			'"Caveat", cursive', // 2
 			'"Reenie Beanie", cursive', // 3
 			'"Mansalva", sans-serif', // 4
-		  ];
-		  
-		  const addFonts = (borough) => {
+		];
+
+		const addFonts = (borough) => {
 			switch (borough) {
-			  case "MANHATTAN":
-				return fonts[2]; // Caveat
-			  case "BROOKLYN":
-				return fonts[0]; // Permanent Marker
-			  case "BRONX":
-				return fonts[4]; // Mansalva
-			  case "QUEENS":
-				return fonts[1]; // Just Me Again Down Here
-			  case "STATEN ISLAND":
-				return fonts[3]; // Reenie Beanie
-			  default:
-				return "Arial, sans-serif"; // Fallback font
+				case "MANHATTAN":
+					return fonts[2]; // Caveat
+				case "BROOKLYN":
+					return fonts[0]; // Permanent Marker
+				case "BRONX":
+					return fonts[4]; // Mansalva
+				case "QUEENS":
+					return fonts[1]; // Just Me Again Down Here
+				case "STATEN ISLAND":
+					return fonts[3]; // Reenie Beanie
+				default:
+					return "Arial, sans-serif"; // Fallback font
 			}
-		  };
-		  
+		};
 
 		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
@@ -181,20 +181,23 @@ export const renderComplaintsBySecond = (data) => {
 					.style("width", `${imageWidth}px`)
 					.style("height", `${imageHeight}px`);
 
-
 				const timeString = formatTime(hours, minutes, seconds);
 
 				function toTitleCase(str) {
-					return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+					return str
+						.toLowerCase()
+						.replace(/\b\w/g, (char) => char.toUpperCase());
 				}
 
 				const newComplaint = secondssDiv
 					.append("p")
 					.html(
 						`${timeString}<br>${
-							toTitleCase(data.complaint_type) === toTitleCase(data.descriptor) 
-								? toTitleCase(data.complaint_type) 
-								: `${toTitleCase(data.complaint_type)}<br>${toTitleCase(data.descriptor)}`
+							toTitleCase(data.complaint_type) === toTitleCase(data.descriptor)
+								? toTitleCase(data.complaint_type)
+								: `${toTitleCase(data.complaint_type)}<br>${toTitleCase(
+										data.descriptor
+								  )}`
 						}<br>${data.incident_zip}`
 					)
 					.attr("class", "complaint")
