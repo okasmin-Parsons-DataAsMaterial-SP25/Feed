@@ -213,13 +213,20 @@ function toTitleCase(str) {
 }
 
 export const formatComplaintText = (data) => {
-	const complaintType = toTitleCase(data.complaint_type);
-	const descriptor = toTitleCase(data.descriptor);
+	try {
+		const complaintType = toTitleCase(data.complaint_type);
 
-	if (complaintType === descriptor) {
-		// only return complaintType
-		return complaintType;
+		let descriptor;
+
+		// there isn't always a descriptor so check first
+		if (data.descriptor) {
+			descriptor = toTitleCase(data.descriptor);
+			if (complaintType !== descriptor) {
+				return `${complaintType}<br>${descriptor}<br>`;
+			}
+		}
+		return `${complaintType}<br>`;
+	} catch {
+		return "";
 	}
-
-	return `${complaintType}<br>${descriptor}`;
 };

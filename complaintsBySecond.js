@@ -183,7 +183,7 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 
 				const newComplaint = secondssDiv
 					.append("p")
-					.html(`${timeString}<br>${complaintText}<br>${data.incident_zip}`)
+					.html(`${timeString}<br>${complaintText}${data.incident_zip}`)
 					.attr("class", "complaint")
 					.style("position", "absolute")
 					.style("left", `${x - textWidth / 2}px`)
