@@ -46,6 +46,8 @@ export const getData = async () => {
 		}
 	}
 
+	getComplaintTypes(allData);
+
 	return allData;
 };
 
@@ -204,4 +206,20 @@ export const formatTime = (h, m, s) => {
 	const ss = String(s).padStart(2, "0");
 
 	return `${hh}:${mm}:${ss}`;
+};
+
+function toTitleCase(str) {
+	return str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export const formatComplaintText = (data) => {
+	const complaintType = toTitleCase(data.complaint_type);
+	const descriptor = toTitleCase(data.descriptor);
+
+	if (complaintType === descriptor) {
+		// only return complaintType
+		return complaintType;
+	}
+
+	return `${complaintType}<br>${descriptor}`;
 };

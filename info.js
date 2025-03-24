@@ -31,9 +31,9 @@ export const renderInfo = (data, majorityType) => {
 	liveInfo
 		.append("p")
 		.html(
-			`The majority of those complaints from <span id="infoHighlight" class="complaint">${formatHourRange(
+			`The majority of those complaints from <span id="infoHighlight" class="complaint-majority">${formatHourRange(
 				currentHour
-			)}</span> were related to <span id="infoHighlight" class="complaint">${majorityType}</span>.`
+			)}</span> were related to <span id="infoHighlight" class="complaint-majority">${majorityType}</span>.`
 		);
 
 	const footer = info.append("div").attr("id", "footer");
@@ -43,7 +43,7 @@ export const renderInfo = (data, majorityType) => {
 			`Designers: Olivia Kasmin & Lisa Sakai Quinley | <a href="https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9/data_preview" target="_blank">Data Source: 311 Service Requests New York City Open Data</a>`
 		);
 
-	d3.selectAll(".complaint").style("color", majorityColor);
+	d3.selectAll(".complaint-majority").style("color", majorityColor);
 };
 
 export const renderInfoButton = () => {

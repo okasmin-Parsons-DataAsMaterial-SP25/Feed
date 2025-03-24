@@ -4,6 +4,7 @@ import {
 	formatDataByHourAndMinuteAndSeconds,
 	getHourColor,
 	formatTime,
+	formatComplaintText,
 } from "./utils";
 
 /**
@@ -163,7 +164,6 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 			}
 		};
 
-		// TODO refactor this to join data with p using d3 instead of using forEach
 		secondData &&
 			secondData.forEach((data) => {
 				const { x, y } = getNonOverlappingPosition();
@@ -179,24 +179,11 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 					.style("height", `${imageHeight}px`);
 
 				const timeString = formatTime(hours, minutes, seconds);
-
-				function toTitleCase(str) {
-					return str
-						.toLowerCase()
-						.replace(/\b\w/g, (char) => char.toUpperCase());
-				}
+				const complaintText = formatComplaintText(data);
 
 				const newComplaint = secondssDiv
 					.append("p")
-					.html(
-						`${timeString}<br>${
-							toTitleCase(data.complaint_type) === toTitleCase(data.descriptor)
-								? toTitleCase(data.complaint_type)
-								: `${toTitleCase(data.complaint_type)}<br>${toTitleCase(
-										data.descriptor
-								  )}`
-						}<br>${data.incident_zip}`
-					)
+					.html(`${timeString}<br>${complaintText}<br>${data.incident_zip}`)
 					.attr("class", "complaint")
 					.style("position", "absolute")
 					.style("left", `${x - textWidth / 2}px`)
