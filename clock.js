@@ -1,8 +1,12 @@
 import "./style.css";
 import * as d3 from "d3";
-import { formatTime } from "./utils";
+import { formatTime, getHourColor } from "./utils";
 
-const clockDiv = d3.select("#clock")
+const currentHour = new Date().getHours();
+const majorityColor = getHourColor(currentHour);
+
+const clockDiv = d3
+	.select("#clock")
 	.style("font-family", "'Voltaire', sans-serif");
 
 const updateClock = () => {
@@ -15,6 +19,7 @@ const updateClock = () => {
 	const timeString = formatTime(h, m, s);
 
 	clockDiv.text(`${timeString}`);
+	clockDiv.style("color", `${majorityColor}`);
 };
 
 export const renderClock = () => {
