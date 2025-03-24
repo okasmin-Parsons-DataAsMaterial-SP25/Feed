@@ -2,7 +2,6 @@ import "./style.css";
 import * as d3 from "d3";
 import {
 	formatDataByHourAndMinuteAndSeconds,
-	getMajorityComplaintType,
 	getHourColor,
 	formatTime,
 } from "./utils";
@@ -17,7 +16,7 @@ const placementDims = {
 	margins: {
 		left: 10,
 		right: 10,
-		top: 25,
+		top: 0,
 		bottom: 10,
 	},
 };
@@ -27,7 +26,7 @@ const scale = 0.5;
 const imageWidth = 1000 * scale;
 const imageHeight = 700 * scale;
 
-const textWidth = 400 * scale;
+const textWidth = 420 * scale;
 const textHeight = 200 * scale;
 
 const pastPlacements = []; // store last 10 positions
@@ -72,11 +71,9 @@ function getNonOverlappingPosition() {
  * complaints start rendering when the app is opened and continue to accumulate
  * complaints are rendered when their timestamp second matches the actual current time (to the second)
  */
-export const renderComplaintsBySecond = (data) => {
+export const renderComplaintsBySecond = (data, majorityType) => {
 	const groupedByHourAndMinuteAndSeconds =
 		formatDataByHourAndMinuteAndSeconds(data);
-
-	const majorityType = getMajorityComplaintType(data).type;
 
 	const secondssDiv = d3.select("#seconds");
 

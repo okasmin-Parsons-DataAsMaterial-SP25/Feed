@@ -5,7 +5,17 @@ import * as d3 from "d3";
  * Fetch paginated data 1000 at a time
  * (NYC Open Data returns 1000 at a time by default)
  */
-export const getData = async (start, end) => {
+export const getData = async () => {
+	// Get today's date
+	const today = new Date();
+	// get the date one week ago by subtracting 7 from today's date
+	const oneWeekAgo = new Date();
+	oneWeekAgo.setDate(today.getDate() - 7);
+
+	// Format to "YYYY-MM-DDT00:00:00"
+	const start = oneWeekAgo.toISOString().split("T")[0] + "T00:00:00";
+	const end = oneWeekAgo.toISOString().split("T")[0] + "T23:59:59";
+
 	const BASE_URL = `https://data.cityofnewyork.us/resource/erm2-nwe9.json`;
 	const LIMIT = 1000; // records per request
 	let offset = 0; // start at first record

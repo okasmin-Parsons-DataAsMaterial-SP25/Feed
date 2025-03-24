@@ -1,8 +1,11 @@
 import "./style.css";
 import * as d3 from "d3";
-import { formatHourRange, getMajorityComplaintType } from "./utils";
+import { formatHourRange, getHourColor } from "./utils";
 
-export const renderInfo = (data) => {
+const currentHour = new Date().getHours();
+const majorityColor = getHourColor(currentHour);
+
+export const renderInfo = (data, majorityType) => {
 	const info = d3.select("#info");
 	info.append("h1").text("How Frustrated Are New Yorkers?");
 	info
@@ -18,8 +21,6 @@ export const renderInfo = (data) => {
 
 	const liveInfo = info.append("div").attr("id", "live-info");
 
-	const currentHour = new Date().getHours();
-	const complaintType = getMajorityComplaintType(data).type;
 	const totalComplaintsDay = data.length;
 
 	liveInfo
@@ -30,9 +31,9 @@ export const renderInfo = (data) => {
 	liveInfo
 		.append("p")
 		.html(
-			`The majority of those complaints from <span id="infoHighlight">${formatHourRange(
+			`The majority of those complaints from <span id="infoHighlight" class="complaint">${formatHourRange(
 				currentHour
-			)}</span> were related to <span id="infoHighlight">${complaintType}</span>.`
+			)}</span> were related to <span id="infoHighlight" class="complaint">${majorityType}</span>.`
 		);
 
 	const footer = info.append("div").attr("id", "footer");
@@ -41,4 +42,23 @@ export const renderInfo = (data) => {
 		.html(
 			`Designers: Olivia Kasmin & Lisa Sakai Quinley | <a href="https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9/data_preview" target="_blank">Data Source: 311 Service Requests New York City Open Data</a>`
 		);
+
+	d3.selectAll(".complaint").style("color", majorityColor);
+};
+
+export const renderInfoButton = () => {
+	const infoDiv = d3.select("#info");
+	const button = d3.select("#toggleInfo");
+	button.style("color", majorityColor);
+
+	const onToggleInfo = () => {
+		const isHidden = infoDiv.style("display") === "none";
+
+		infoDiv.style("display", isHidden ? "block" : "none");
+
+		button.style("background-color", isHidden ? majorityColor : "#ddd");
+		button.style("color", isHidden ? "white" : majorityColor);
+	};
+
+	button.on("click", onToggleInfo);
 };
