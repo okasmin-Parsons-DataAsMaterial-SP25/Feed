@@ -72,7 +72,146 @@ function getNonOverlappingPosition() {
  * complaints start rendering when the app is opened and continue to accumulate
  * complaints are rendered when their timestamp second matches the actual current time (to the second)
  */
+
 export const renderComplaintsBySecond = (data, majorityType) => {
+	const groupedByHourAndMinuteAndSeconds =
+		formatDataByHourAndMinuteAndSeconds(data);
+
+	const secondssDiv = d3.select("#seconds");
+
+	const renderCurrentSecond = () => {
+		const date = new Date();
+		const hours = date.getHours();
+		const minutes = date.getMinutes();
+		const seconds = date.getSeconds();
+
+		// get data for current time
+		const hourData = groupedByHourAndMinuteAndSeconds.get(hours);
+		const minuteData = hourData.get(minutes);
+		const secondData = minuteData.get(seconds);
+
+		const bubbleImages = [
+			"./bubble1.svg",
+			"./bubble2.svg",
+			"./bubble3.svg",
+			"./bubble4.svg",
+			"./bubble5.svg",
+		];
+
+		const getImageSrc = (borough) => {
+			if (borough === "MANHATTAN") {
+				return bubbleImages[0];
+			} else if (borough === "BROOKLYN") {
+				return bubbleImages[1];
+			} else if (borough === "BRONX") {
+				return bubbleImages[2];
+			} else if (borough === "QUEENS") {
+				return bubbleImages[3];
+			} else {
+				return bubbleImages[Math.floor(Math.random() * bubbleImages.length)];
+			}
+		};
+
+		const fontSizes = [16, 14, 18, 18, 18];
+
+		const getFontSize = (borough) => {
+			switch (borough) {
+				case "MANHATTAN":
+					return fontSizes[0];
+				case "BROOKLYN":
+					return fontSizes[1];
+				case "BRONX":
+					return fontSizes[2];
+				case "QUEENS":
+					return fontSizes[3];
+				case "STATEN ISLAND":
+					return fontSizes[4];
+				default:
+					return fontSizes[Math.floor(Math.random() * fontSizes.length)];
+			}
+		};
+
+		const fonts = [
+			'"Permanent Marker", cursive',
+			'"Just Me Again Down Here", cursive',
+			'"Caveat", cursive',
+			'"Reenie Beanie", cursive',
+			'"Mansalva", sans-serif',
+		];
+
+		const addFonts = (borough) => {
+			switch (borough) {
+				case "MANHATTAN":
+					return fonts[2];
+				case "BROOKLYN":
+					return fonts[0];
+				case "BRONX":
+					return fonts[4];
+				case "QUEENS":
+					return fonts[1];
+				case "STATEN ISLAND":
+					return fonts[3];
+				default:
+					return "Arial, sans-serif";
+			}
+		};
+
+		secondData &&
+	secondData.forEach((data) => {
+		const { x, y } = getNonOverlappingPosition();
+		const textColor = data.complaint_type === majorityType ? getHourColor(hours) : null;
+
+		d3.xml(getImageSrc(data.borough)).then((xml) => {
+			const importedNode = document.importNode(xml.documentElement, true);
+			const bubble = secondssDiv
+				.append(() => importedNode)
+				.attr("class", "bubble")
+				.style("position", "absolute")
+				.style("left", `${x - imageWidth / 2}px`)
+				.style("top", `${y - imageHeight / 2}px`)
+				.style("width", `${imageWidth}px`)
+				.style("height", `${imageHeight}px`);
+
+			// Apply color to the bubble's path if it matches majorityType
+			if (textColor) {
+				d3.select(bubble.node())
+					.selectAll("path")
+					.filter(function () {
+						return d3.select(this).attr("fill") !== "#FFFFFF";
+					})
+					.style("fill", textColor);
+			}
+
+			const timeString = formatTime(hours, minutes, seconds);
+			const complaintText = formatComplaintText(data);
+
+			let fontSize = getFontSize(data.borough);
+			if (complaintText.length > 40) fontSize *= 0.85;
+
+			const newComplaint = secondssDiv
+				.append("p")
+				.html(`${timeString}<br>${complaintText}${data.incident_zip}`)
+				.attr("class", "complaint")
+				.style("position", "absolute")
+				.style("left", `${x - textWidth / 2}px`)
+				.style("top", `${y - textHeight / 2 - 22.5}px`)
+				.style("width", `${textWidth}px`)
+				.style("height", `${textHeight}px`)
+				.style("font-family", addFonts(data.borough))
+				.style("font-size", `${fontSize}pt`);
+
+			// Sync text color if it's majorityType
+			if (textColor) {
+				newComplaint.style("color", textColor);
+			}
+		});
+	});
+
+	};
+
+
+
+/* export const renderComplaintsBySecond = (data, majorityType) => {
 	const groupedByHourAndMinuteAndSeconds =
 		formatDataByHourAndMinuteAndSeconds(data);
 
@@ -193,7 +332,7 @@ export const renderComplaintsBySecond = (data, majorityType) => {
 					newComplaint.style("color", getHourColor(hours));
 				}
 			});
-	};
+	}; */
 
 	// initial render
 	renderCurrentSecond();

@@ -61,6 +61,9 @@
 }
 
 #info {
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 	width: 100vw;
 	height: 100vh;
 	padding: 0px 40px 0px 40px;
@@ -75,16 +78,29 @@
 	text-align: center;
 	flex-direction: column;
 	position: absolute;
-	top: 65%;
+	top: 48%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 100%;
 	max-width: 1200px;
 }
 
-#info h1 {
+#title {
+	margin-left: 40px;
+}
+
+#title p {
+	font-family: "Cormorant Garamond", serif;
+	font-size: 16pt;
+}
+
+#title h1 {
 	font-family: "Voltaire", sans-serif;
 	font-size: 40pt;
+}
+#title h2 {
+	font-family: "Voltaire", sans-serif;
+	font-size: 18pt;
 }
 
 #info p,
@@ -110,9 +126,8 @@
 
 #clock {
 	position: absolute;
-	top: 10px;
-	right: 10px;
-	font-family: monospace;
+	top: 40px;
+	right: 40px;
 	font-size: 2rem;
 	z-index: 100;
 }
@@ -130,15 +145,10 @@ a {
 }
 
 
-#legend {
-	display: flex;
-	justify-content: center;
-	margin-top: 75px;
-}
-
 .legend-image {
 	width: 440px;
 	margin-left: -75px; /* Creates an overlap effect */
+	margin-bottom: -40px;
 }
 
 /* Make sure the first image doesn't pull to the left */

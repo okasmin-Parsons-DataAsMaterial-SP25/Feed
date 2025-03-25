@@ -7,17 +7,6 @@ const majorityColor = getHourColor(currentHour);
 
 export const renderInfo = (data, majorityType) => {
 	const info = d3.select("#info");
-	info.append("h1").text("How Frustrated Are New Yorkers?");
-	info
-		.append("p")
-		.text(
-			"A second-by-second visualization of a day of 311 service requests in New York City."
-		);
-	info
-		.append("p")
-		.text(
-			"Complaints are shown at the exact time they were filed, at this time a week ago."
-		);
 
 	const liveInfo = info.append("div").attr("id", "live-info");
 
@@ -36,6 +25,34 @@ export const renderInfo = (data, majorityType) => {
 			)}</span> were related to <span id="infoHighlight" class="complaint-majority">${majorityType}</span>.`
 		);
 
+	const legendBubbles = [
+		"./Manhattan.png",
+		"./Brooklyn.png",
+		"./Bronx.png",
+		"./Queens.png",
+		"./StatenIsland.png",
+	];
+
+	// Add legend below the second line of liveInfo
+	const legend = liveInfo.append("div").attr("id", "legend");
+
+	// Append each image
+	legendBubbles.forEach((src) => {
+		legend.append("img").attr("src", src).attr("class", "legend-image");
+	});
+
+	liveInfo
+		.append("p")
+		.text("A second-by-second visualization of a day of 311 service requests in New York City.")
+		.style("margin-top", "45px")
+		.style("margin-bottom", "45px");
+	liveInfo
+		.append("p")
+		.text(
+			"Complaints are shown at the exact time they were filed, at this time a week ago."
+		)
+		.style("margin-bottom", "45px");
+
 	const footer = info.append("div").attr("id", "footer");
 	footer
 		.append("p")
@@ -44,25 +61,8 @@ export const renderInfo = (data, majorityType) => {
 		);
 
 	d3.selectAll(".complaint-majority").style("color", majorityColor);
-
-	const legendBubbles = [
-		"./Manhattan.png",
-		"./Brooklyn.png",
-		"./Bronx.png",
-		"./Queens.png",
-		"./StatenIsland.png",
-	];
-	
-	// Add legend below the footer
-	const legend = info.append("div").attr("id", "legend");
-	
-	// Append each image
-	legendBubbles.forEach((src) => {
-		legend.append("img").attr("src", src).attr("class", "legend-image");
-	});	
-	
-
 };
+
 
 export const renderInfoButton = () => {
 	const infoDiv = d3.select("#info");

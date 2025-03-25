@@ -4,9 +4,27 @@ import { getData, getMajorityComplaintType } from "./utils";
 import { renderInfo, renderInfoButton } from "./info";
 import { renderComplaintsBySecond } from "./complaintsBySecond";
 import { renderClock } from "./clock";
+import { getHourColor } from "./utils";
+
+const currentHour = new Date().getHours();
+const majorityColor = getHourColor(currentHour);
 
 // Render clock component first so it's visible while data loading
 renderClock();
+
+const info = d3.select("body").append("div").attr("id", "title")
+  .style("display", "flex")
+  .style("align-items", "baseline")
+  .style("gap", "10px"); // Optional for spacing
+
+info.append("h1")
+  .text("How Frustrated Are New Yorkers?")
+  .style("color", `${majorityColor}`);
+
+info.append("h2")
+  .text("Visualizing an hour of 311 service requests in New York City")
+  .style("color", `${majorityColor}`);
+
 
 /**
  * GET DATA
