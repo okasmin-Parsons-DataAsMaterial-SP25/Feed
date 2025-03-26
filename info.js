@@ -8,6 +8,21 @@ const majorityColor = getHourColor(currentHour);
 export const renderInfo = (data, majorityType) => {
 	const info = d3.select("#info");
 
+	const title = info.append("div").attr("id", "titleInfo")
+	.style("display", "flex")
+	.style("align-items", "baseline")
+	.style("gap", "10px");
+
+	title
+		.append("h1")
+		.text("How Frustrated Are New Yorkers?")
+		.style("color", `${majorityColor}`);
+
+	title
+		.append("h2")
+		.text("Visualizing an hour of 311 service requests in New York City")
+		.style("color", `${majorityColor}`);
+
 	const liveInfo = info.append("div").attr("id", "live-info");
 
 	const totalComplaintsDay = data.length;

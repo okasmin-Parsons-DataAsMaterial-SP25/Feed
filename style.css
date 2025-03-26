@@ -78,11 +78,16 @@
 	text-align: center;
 	flex-direction: column;
 	position: absolute;
-	top: 48%;
+	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 100%;
-	max-width: 1200px;
+}
+
+#titleInfo {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
 }
 
 #title {
@@ -94,11 +99,11 @@
 	font-size: 16pt;
 }
 
-#title h1 {
+#title h1, #titleInfo h1 {
 	font-family: "Voltaire", sans-serif;
 	font-size: 40pt;
 }
-#title h2 {
+#title h2, #titleInfo h2{
 	font-family: "Voltaire", sans-serif;
 	font-size: 18pt;
 }
